@@ -85,7 +85,7 @@ function Contact() {
       message: "",
     },
     onSubmit: async (values) => {
-      let enquiry = await fetch("http://localhost:4000/enquires", {
+      let enquiry = await fetch("https://sk-bike-care-backend.vercel.app/enquires", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

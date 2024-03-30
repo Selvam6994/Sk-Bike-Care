@@ -7,13 +7,23 @@ import Service from "./Service";
 import About from "./About";
 import Servicehistory from "./Servicehistory";
 
-
 function App() {
   return (
     <div className="app">
-    
       <Routes>
-       <Route path="" element={<>  <Navbar /><Home/><About/><Service/><Contact/></>}/>
+        <Route
+          path=""
+          element={
+            <>
+              {" "}
+              <Navbar />
+              <Home />
+              <About />
+              <Service />
+              <Contact />
+            </>
+          }
+        />
         <Route path="serviceHistory" element={<Servicehistory />} />
       </Routes>
     </div>

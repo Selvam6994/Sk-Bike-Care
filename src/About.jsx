@@ -23,14 +23,14 @@ function About() {
   ];
   return (
     <div className="aboutPage" id="about">
-      <Card className="aboutUsCard">
+      <Card className="aboutUsCard" elevation={16}>
         <CardMedia
-          sx={{ height: 300, width: "100%" }}
+          sx={{ height: "fitContent", width: "100%", }}
           image={serviceCardImage}
           title="Royal Enfield"
         >
           <CardMedia
-            sx={{ height: 300, width: "100%" }}
+            sx={{ height: "fitContent", width: "100%", padding: "50px" }}
             style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
           >
             <CardContent className="aboutUsContent">
@@ -42,28 +42,27 @@ function About() {
                 <span>electric vehicles</span>
               </p>
             </CardContent>
+            <div className="featuresSection">
+              {featuresContent.map((data) => (
+                <div className="features">
+                  <Paper
+                    elevation={8}
+                    className="featuresIcons"
+                    style={{ borderRadius: "50%", backgroundColor: "#EDCD00" }}
+                  >
+                    <img
+                      style={{ width: "100px" }}
+                      src={data.image}
+                      alt={data.name}
+                    />
+                  </Paper>
+                  <span>{data.name}</span>
+                </div>
+              ))}
+            </div>
           </CardMedia>
         </CardMedia>
       </Card>
-      <div className="featuresSection">
-        {featuresContent.map((data) => (
-          <div className="features">
-            <Paper
-              elevation={8}
-              className="featuresIcons"
-              style={{ borderRadius: "50%", backgroundColor: "#EDCD00" }}
-            >
-              <img
-                style={{ width: "100px" }}
-                src={data.image}
-                alt={data.name}
-              />
-            </Paper>
-            <span>{data.name}</span>
-          </div>
-        ))}
-      </div>
-      
     </div>
   );
 }

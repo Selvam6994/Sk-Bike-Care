@@ -1,0 +1,4 @@
+login: "http://localhost:4000/logIn"
+signup:"http://localhost:4000/signUp"
+otpverfication: "http://localhost:4000/signUp/otpVerification",
+setpasscode: `http://localhost:4000/signUp/${signUpForm.values.email}`,

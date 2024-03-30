@@ -20,7 +20,7 @@ function Service() {
   const [serviceOptions, setServiceOptions] = useState([]);
   //   get service list data function
   async function showServiceData() {
-    const serviceList = await fetch("http://localhost:4000/getServiceList");
+    const serviceList = await fetch("https://sk-bike-care-backend.vercel.app/getServiceList");
     const jsonData = await serviceList.json();
 
     if (jsonData.message == "No data available") {
@@ -32,7 +32,6 @@ function Service() {
     showServiceData();
   }, []);
 
- 
   const serviceType = [
     {
       name: "General Check-up",
@@ -201,7 +200,7 @@ function Service() {
       date: "",
     },
     onSubmit: async (values) => {
-      let bookingData = await fetch("http://localhost:4000/serviceBooking", {
+      let bookingData = await fetch("https://sk-bike-care-backend.vercel.app/serviceBooking", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -221,27 +220,6 @@ function Service() {
     },
   });
 
-  // function dataCondition(data) {
-  //   if (data.type == "ordinary") {
-  //     return (
-  //       <span>
-  //         Starts @{" "}
-  //         <span style={{ fontSize: "25px", color: "#EDCD00" }}>
-  //           Rs.{data.price}/-
-  //         </span>
-  //         <span style={{ fontSize: "20px", color: "#EDCD00" }}>
-  //           Click for enquiry
-  //         </span>
-  //       </span>
-  //     );
-  //   } else {
-  //     return (
-  //       <span style={{ fontSize: "20px", color: "#EDCD00" }}>
-  //         Click for enquiry
-  //       </span>
-  //     );
-  //   }
-  // }
 
   function serviceBookingForm() {
     if (serviceForm) {
@@ -500,17 +478,17 @@ function Service() {
   return (
     <div className="servicePage" id="services">
       <Card
-        elevation={8}
+        elevation={16}
         className="bookingStepsCard"
         style={{ borderRadius: "20px" }}
       >
         <CardMedia
-          sx={{ height: 300, width: "100%" }}
+          sx={{ height: "fitContent", width: "100%" }}
           image={serviceCardImage}
           title="Royal Enfield"
         >
           <CardMedia
-            sx={{ height: 300, width: "100%" }}
+            sx={{ height: "fitContent", width: "100%",padding:"50px" }}
             style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
           >
             <CardContent
@@ -536,51 +514,57 @@ function Service() {
                 <Typography>Let our team handle the rest.</Typography>
               </div>
             </CardContent>
+            <div className="bookingCardSection">
+              <span style={{ fontSize: "40px", color: "#EDCD00" }}>
+                Our Services
+              </span>
+              <div className="serviceOptionCards">
+                {serviceOptions.map((data) => (
+                  <motion.div
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    onMouseEnter={() => setCardDetails(data.nameOfService)}
+                    onMouseLeave={() => setCardDetails()}
+                    onClick={() => {
+                      if (sessionStorage.length == 0) {
+                        alert("kindly login to book your service.");
+                      } else setServiceForm(true);
+                    }}
+                  >
+                    <Paper
+                      elevation={8}
+                      className="serviceCards"
+                      style={{
+                        borderRadius: "20px",
+                        backgroundColor: "#EDCD00",
+                      }}
+                    >
+                      <img src={data.imageLink} alt="" />
+                      {cardDetails == data.nameOfService ? (
+                        <div className="seviceCardDetails">
+                          <span>{data.nameOfService}</span>
+                          <span>
+                            Starts @{" "}
+                            <span
+                              style={{ fontSize: "25px", color: "#EDCD00" }}
+                            >
+                              Rs.{data.price}/-
+                            </span>
+                          </span>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </Paper>
+                  </motion.div>
+                ))}
+              </div>
+              {serviceBookingForm()}
+            </div>
           </CardMedia>
         </CardMedia>
       </Card>
-      <div className="bookingCardSection">
-        <span style={{ fontSize: "40px", color: "#EDCD00" }}>Our Services</span>
-        <div className="serviceOptionCards">
-          {serviceOptions.map((data) => (
-            <motion.div
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              onMouseEnter={() => setCardDetails(data.nameOfService)}
-              onMouseLeave={() => setCardDetails()}
-              onClick={() => {
-                if (sessionStorage.length == 0) {
-                  alert("kindly login to book your service.");
-                } else setServiceForm(true);
-              }}
-            >
-              <Paper
-                elevation={8}
-                className="serviceCards"
-                style={{ borderRadius: "20px", backgroundColor: "#EDCD00" }}
-              >
-                <img src={data.imageLink} alt="" />
-                {cardDetails == data.nameOfService ? (
-                  <div className="seviceCardDetails">
-                    <span>{data.nameOfService}</span>
-
-                    <span>
-                      Starts @{" "}
-                      <span style={{ fontSize: "25px", color: "#EDCD00" }}>
-                        Rs.{data.price}/-
-                      </span>
-                    </span>
-                  </div>
-                ) : (
-                  ""
-                )}
-              </Paper>
-            </motion.div>
-          ))}
-        </div>
-        {serviceBookingForm()}
-      </div>
     </div>
   );
 }

@@ -9,803 +9,238 @@ import appLogo from "./assets/App Images/Navbar Logo/App logo.png";
 import { useFormik } from "formik";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { Link } from "react-router-dom";
+import Menudropdown from "./Menudropdown";
 
 function Navbar() {
-  const resNavbarButtons = useMediaQuery("(min-width:1028px)");
-  const resLoginForm = useMediaQuery("(min-width:570px)");
-  const resNavbar = useMediaQuery("(min-width:600px)");
-  const navOptions = [
+  const tabResponsive = useMediaQuery("(min-width:1000px)");
+  const buttons = [
     {
       name: "Home",
-      navgateTo: "/",
-      backGroundColor: "#EDCD00",
+      route: "#/",
     },
     {
-      name: "About Us",
-      navgateTo: "about",
-      backGroundColor: "#EDCD00",
+      name: "About",
+      route: "#about",
     },
     {
-      name: "Our Services",
-      navgateTo: "services",
-      backGroundColor: "#EDCD00",
+      name: "Services",
+      route: "#services",
     },
     {
       name: "Contact",
-      navgateTo: "contact",
-      backGroundColor: "#EDCD00",
+      route: "#contact",
     },
   ];
 
-  const [logInForm, setLogInForm] = useState(false);
-  const [userAccountForm, setuserAccountForm] = useState(false);
-  const [otpVerifyForm, setOtpVerifyForm] = useState(false);
-  const [newPinSetForm, setnewPinSetForm] = useState(false);
-  const [resetPinOtpForm, setresetPinOtpForm] = useState(false);
-  const [resetPinForm, setResetPinForm] = useState(false);
-  const [userHistory, setUserHistory] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [dropDown, setDropDown] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
+  const [signUpform, setSignupForm] = useState(false);
+  const [forgotPassword, setForgotPasswordForm] = useState(false);
+  // const [userButtons, setuserButtons] = useState("");
 
-  // form validation
-
-  const loginForm = useFormik({
+  const token = sessionStorage.getItem("userAuth");
+  // formik
+  const logInUser = useFormik({
     initialValues: {
       email: "",
       pin: "",
     },
-
     onSubmit: async (values) => {
-      let logInData = await fetch("http://localhost:4000/logIn", {
+      let userData = await fetch("https://sk-bike-care-backend.vercel.app/logIn", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
         body: JSON.stringify(values),
       });
-      if (logInData.status == 200) {
-        let token = await logInData.json();
-        sessionStorage.setItem("authrisationToken", token.token);
-
-        setLogInForm(false);
-      } else {
-        setErrorMessage("Invalid Credentials");
-      }
-    },
-  });
-
-  const signUpForm = useFormik({
-    initialValues: {
-      email: "",
-      phone: "",
-    },
-    onSubmit: async (values) => {
-      let signUpData = await fetch("http://localhost:4000/signUp", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-      if (signUpData.status == 201) {
-        setOtpVerifyForm(true);
-        setuserAccountForm(false);
-        setErrorMessage("");
-        document.getElementById("otp").value = "";
-        console.log("email sent");
-      } else if (signUpData.status == 400 || signUpData.status == 401) {
-        setErrorMessage("Invalid credentials try any other email");
-      }
-    },
-  });
-
-  const signUpOtpForm = useFormik({
-    initialValues: {
-      otp: "",
-    },
-    onSubmit: async (values) => {
-      let otpData = await fetch(
-        "http://localhost:4000/signUp/otpVerification",
-        {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      );
-      if (otpData.status == 200) {
-        setnewPinSetForm(true);
-        setErrorMessage("");
-        document.getElementById("otp").value = "";
-      } else if (otpData.status == 400) {
-        setErrorMessage("OTP does not match");
-      }
-    },
-  });
-
-  const setNewPasscode = useFormik({
-    initialValues: {
-      name: "",
-      phone: "",
-      pin: "",
-      confirmPin: "",
-    },
-    onSubmit: async (values) => {
-      let userData = await fetch(
-        `http://localhost:4000/signUp/${signUpForm.values.email}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      );
       if (userData.status == 200) {
-        setuserAccountForm(false);
-        setOtpVerifyForm(false);
-        setErrorMessage("");
-      } else if (userData.status == 400) {
-        setErrorMessage("Check the pin number");
+        // setuserButtons();
+        setOpenForm(false);
+        const token = await userData.json();
+        // setUserToken(token.token);
+        sessionStorage.setItem("token", token.token);
       }
     },
   });
-
-  const resetOtpForm = useFormik({
-    initialValues: {
-      otp: "",
-    },
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
-
-  const resetPasscodeForm = useFormik({
-    initialValues: {
-      pin: "",
-      confirmPin: "",
-    },
-    onSubmit: (values) => {
-      console.log(values);
-    },
-  });
-
-  function switchuserAccountForm() {
-    if (
-      !userAccountForm &&
-      !otpVerifyForm &&
-      !resetPinOtpForm &&
-      !resetPinForm
-    ) {
-      return (
-        <>
-          <form className="logInForm" onSubmit={loginForm.handleSubmit}>
-            <TextField
-              required
-              id="email"
-              label="Email"
-              type="email"
-              name="email"
-              variant="standard"
-              onChange={loginForm.handleChange}
-              onBlur={loginForm.handleBlur}
-            />
-            {loginForm.touched.email ? (
-              loginForm.values.email == "" ? (
-                <span style={{ color: "red" }}>Email is required</span>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
-            <TextField
-              id="pin"
-              label="Passcode"
-              type="number"
-              name="pin"
-              variant="standard"
-              onChange={loginForm.handleChange}
-              onBlur={loginForm.handleBlur}
-            />
-
-            {loginForm.touched.pin ? (
-              loginForm.values.pin == "" ? (
-                <span style={{ color: "red" }}>Pin is required</span>
-              ) : (
-                ""
-              )
-            ) : (
-              ""
-            )}
-            <span style={{ color: "red" }}>{errorMessage}</span>
-            <Button type="submit">
-              <motion.div
-                className="box"
-                whileHover={{ scale: 1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                onClick={() => setLogInForm(true)}
-              >
-                <Paper
-                  className="logInButton"
-                  style={{ backgroundColor: "#EDCD00" }}
-                >
-                  Log In
-                </Paper>
-              </motion.div>
-            </Button>
-          </form>
-          <motion.div
-            className="userAccountButtonSection"
-            whileHover={{ scale: 1 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            onClick={() => setuserAccountForm(true)}
-          >
-            <Paper
-              className="userAccountButton"
-              style={{ backgroundColor: "#EDCD00" }}
-            >
-              New User?
-            </Paper>
-          </motion.div>
-          <motion.div
-            className="userAccountButtonSection"
-            whileHover={{ scale: 1 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            onClick={() => setresetPinOtpForm(true)}
-          >
-            <Paper
-              className="userAccountButton"
-              style={{ backgroundColor: "#EDCD00" }}
-            >
-              Forgot Pin?
-            </Paper>
-          </motion.div>
-        </>
-      );
-    } else if (userAccountForm) {
-      return (
-        <form className="userAccountForm" onSubmit={signUpForm.handleSubmit}>
-          <TextField
-            id="email"
-            label="Email"
-            type="email"
-            name="email"
-            variant="standard"
-            onChange={signUpForm.handleChange}
-            onBlur={signUpForm.handleBlur}
-          />{" "}
-          {signUpForm.touched.email ? (
-            signUpForm.values.email == "" ? (
-              <span style={{ color: "red" }}>Email is required</span>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-          <span style={{ color: "red" }}>{errorMessage}</span>
-          <motion.div
-            whileHover={{ scale: 1 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            <Button type="submit">
-              <Paper
-                className="logInButton"
-                style={{ backgroundColor: "#EDCD00" }}
-              >
-                Send OTP
-              </Paper>
-            </Button>
-          </motion.div>
-        </form>
-      );
-    } else if (otpVerifyForm && !newPinSetForm) {
-      return (
-        <form className="userAccountForm" onSubmit={signUpOtpForm.handleSubmit}>
-          <span>Check Your Email</span>
-          <TextField
-            id="otp"
-            label="OTP"
-            type="number"
-            name="otp"
-            variant="standard"
-            onChange={signUpOtpForm.handleChange}
-            onBlur={signUpOtpForm.handleBlur}
-          />
-          {signUpOtpForm.touched.otp ? (
-            signUpOtpForm.values.otp == "" ? (
-              <span style={{ color: "red" }}>Otp is required</span>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-          <span style={{ color: "red" }}>{errorMessage}</span>
-          <Button type="submit">
-            <motion.div
-              whileHover={{ scale: 1 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              <Paper
-                className="logInButton"
-                style={{ backgroundColor: "#EDCD00" }}
-              >
-                Verify OTP
-              </Paper>
-            </motion.div>
-          </Button>
-        </form>
-      );
-    } else if (newPinSetForm) {
-      return (
-        <form
-          className="userAccountForm"
-          onSubmit={setNewPasscode.handleSubmit}
-        >
-          <TextField
-            id="name"
-            label="Name"
-            type="text"
-            name="name"
-            variant="standard"
-            onChange={setNewPasscode.handleChange}
-            onBlur={setNewPasscode.handleBlur}
-          />
-          {setNewPasscode.touched.name ? (
-            setNewPasscode.values.name == "" ? (
-              <span style={{ color: "red" }}>Name is required</span>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-          <TextField
-            id="phone"
-            label="Phone"
-            type="number"
-            name="phone"
-            variant="standard"
-            onChange={setNewPasscode.handleChange}
-            onBlur={setNewPasscode.handleBlur}
-          />
-          {setNewPasscode.touched.phone ? (
-            setNewPasscode.values.phone == "" ? (
-              <span style={{ color: "red" }}>Phone Number is required</span>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-          <TextField
-            id="pin"
-            label="New Pin"
-            type="number"
-            name="pin"
-            variant="standard"
-            onChange={setNewPasscode.handleChange}
-            onBlur={setNewPasscode.handleBlur}
-          />
-          {setNewPasscode.touched.pin ? (
-            setNewPasscode.values.pin == "" ? (
-              <span style={{ color: "red" }}>Pin is required</span>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-          <TextField
-            id="confirmPin"
-            label="Confirm Pin"
-            type="number"
-            name="confirmPin"
-            variant="standard"
-            onChange={setNewPasscode.handleChange}
-            onBlur={setNewPasscode.handleBlur}
-          />
-          {setNewPasscode.touched.confirmPin ? (
-            setNewPasscode.values.confirmPin == "" ? (
-              <span style={{ color: "red" }}>
-                Please confirm the Pin number
-              </span>
-            ) : (
-              ""
-            )
-          ) : (
-            ""
-          )}
-          <span style={{ color: "red" }}>{errorMessage}</span>
-          <Button type="submit">
-            <motion.div
-              whileHover={{ scale: 1 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              <Paper
-                className="logInButton"
-                style={{ backgroundColor: "#EDCD00" }}
-              >
-                Submit
-              </Paper>
-            </motion.div>
-          </Button>
-        </form>
-      );
-    } else if (resetPinOtpForm) {
-      return (
-        <form className="userAccountForm" onSubmit={resetOtpForm.handleSubmit}>
-          <span>Check Your Email</span>
-          <TextField
-            id="otp"
-            label="OTP"
-            type="number"
-            name="otp"
-            variant="standard"
-            onChange={resetOtpForm.handleChange}
-          />
-          <Button type="submit">
-            <motion.div
-              whileHover={{ scale: 1 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              onClick={() => setResetPinForm(true) || setresetPinOtpForm(false)}
-            >
-              <Paper
-                className="logInButton"
-                style={{ backgroundColor: "#EDCD00" }}
-              >
-                Verify OTP
-              </Paper>
-            </motion.div>
-          </Button>
-        </form>
-      );
-    } else if (resetPinForm && logInForm) {
-      return (
-        <form
-          className="userAccountForm"
-          onSubmit={resetPasscodeForm.handleSubmit}
-        >
-          <TextField
-            id="pin"
-            label="New Pin"
-            type="number"
-            name="pin"
-            variant="standard"
-            onChange={resetPasscodeForm.handleChange}
-          />
-          <TextField
-            id="confirmPin"
-            label="Confirm Pin"
-            type="number"
-            name="confirmPin"
-            variant="standard"
-            onChange={resetPasscodeForm.handleChange}
-          />
-
-          <Button type="submit">
-            <motion.div
-              whileHover={{ scale: 1 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              onClick={() =>
-                setuserAccountForm(false) ||
-                setOtpVerifyForm(false) ||
-                setResetPinForm(false)
-              }
-            >
-              <Paper
-                className="logInButton"
-                style={{ backgroundColor: "#EDCD00" }}
-              >
-                Submit
-              </Paper>
-            </motion.div>
-          </Button>
-        </form>
-      );
-    }
-  }
-
-  function logInButton() {
-    if (logInForm) {
-      return (
-        <Paper
-          className={resLoginForm ? "logInFormPaper" : "resLogInFormPaper"}
-        >
-          <div className="closeButtonSection">
-            <IconButton
-              aria-label="delete"
-              size="large"
-              onClick={() =>
-                setLogInForm(false) ||
-                setuserAccountForm(false) ||
-                setOtpVerifyForm(false) ||
-                setresetPinOtpForm(false) ||
-                setResetPinForm(false) ||
-                setErrorMessage("")
-              }
-            >
-              <CloseIcon />
-            </IconButton>
-          </div>
-          {switchuserAccountForm()}
-        </Paper>
-      );
-    } else {
-      return null;
-    }
-  }
 
   return (
-    <div className={resNavbar ? "navBar" : "tabResNavBar"}>
-      <div className={resNavbar ? "navLogoSection" : "resNavLogoSection"}>
-        <img src={appLogo} alt="Logo" />
-      </div>
-
-      {!resNavbarButtons ? (
-        <div
-          className={resNavbar ? "navButtonsSection" : "resNavButtonsSection"}
-        >
-          {logInButton()}
-          <div>
-            <motion.div
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              style={{ marginRight: "50px" }}
-            >
-              <Paper elevation={8}>
-                {dropDown == false ? (
-                  <IconButton
-                    onClick={() => setDropDown(true) || setLogInForm(false)}
-                    aria-label="menu"
-                    size="large"
-                  >
-                    <MenuIcon fontSize="inherit" />
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    onClick={() => setDropDown(false)}
-                    aria-label="menu open"
-                    size="large"
-                  >
-                    <MenuOpenIcon fontSize="inherit" />
-                  </IconButton>
-                )}
-              </Paper>
-            </motion.div>
-            {dropDown == true ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  duration: 1,
-                  ease: [0, 0.71, 0.2, 1.01],
-                  scale: {
-                    type: "spring",
-                    damping: 10,
-                    stiffness: 100,
-                    restDelta: 0.001,
-                  },
-                }}
-              >
-                <Paper elevation={8} className="dropDown">
-                  {navOptions.map((options) => (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{
-                        delay: options.transDelay,
-                        duration: 1,
-                        ease: [0, 0.71, 0.2, 1.01],
-                        scale: {
-                          damping: 10,
-                          stiffness: 100,
-                          restDelta: 0.001,
-                        },
-                      }}
-                    >
-                      <motion.div
-                        whileHover={{ scale: 1.2 }}
-                        whileTap={{ scale: 0.9 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 17,
-                        }}
-                      >
-                        <a
-                          href={`#${options.navgateTo} `}
-                          className="nav-link scrollto"
-                        >
-                          <Button>
-                            {" "}
-                            <Paper elevation={4} className="dropDownOption">
-                              {options.name}
-                            </Paper>
-                          </Button>
-                        </a>
-                      </motion.div>
-                    </motion.div>
-                  ))}
-                  {sessionStorage.length != 0 ? (
-                    <>
-                      <motion.div
-                        whileHover={{ scale: 1 }}
-                        whileTap={{ scale: 0.9 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 17,
-                        }}
-                      >
-                        {/* `${sessionStorage.getItem("authrisationToken")}` */}
-                        <Link
-                          to="serviceHistory"
-                          style={{ textDecoration: "none" }}
-                        >
-                          <Paper
-                            className="navButtons"
-                            elevation={8}
-                            style={{ backgroundColor: "#EDCD00" }}
-                          >
-                            Service History
-                          </Paper>
-                        </Link>
-                      </motion.div>
-
-                      <motion.div
-                        whileHover={{ scale: 1 }}
-                        whileTap={{ scale: 0.9 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 17,
-                        }}
-                        onClick={() =>
-                          sessionStorage.clear() || window.location.reload()
-                        }
-                      >
-                        <Paper
-                          className="navButtons"
-                          elevation={8}
-                          style={{ backgroundColor: "#EDCD00" }}
-                        >
-                          Log Out
-                        </Paper>
-                      </motion.div>
-                    </>
-                  ) : (
-                    <motion.div
-                      whileHover={{ scale: 1 }}
-                      whileTap={{ scale: 0.9 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 17,
-                      }}
-                      onClick={() =>
-                        setLogInForm(true) || setnewPinSetForm(false)
-                      }
-                    >
-                      <Paper
-                        className="navButtons"
-                        elevation={8}
-                        style={{ backgroundColor: "#EDCD00" }}
-                      >
-                        Log In
-                      </Paper>
-                    </motion.div>
-                  )}
-                </Paper>
-              </motion.div>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      ) : (
-        <div className="navButtonsSection">
-          {navOptions.map((data) => (
-            <motion.div
-              whileHover={{ scale: 1 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              <a href={`#${data.navgateTo} `} className="nav-link scrollto">
-                <Paper
-                  className="navButtons"
-                  elevation={8}
-                  style={{ backgroundColor: data.backGroundColor }}
-                >
-                  {data.name}
-                </Paper>
-              </a>
-            </motion.div>
-          ))}
-
-          {sessionStorage.length != 0 ? (
-            <>
-              <motion.div
-                whileHover={{ scale: 1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              >
-                <Link
-                  to="serviceHistory"
-                  style={{ textDecoration: "none" }}
+    <div className="navBar">
+      <div className="navContent">
+        <img className="appLogo" src={appLogo} alt="appLogo" />
+        {tabResponsive ? (
+          <div className="navButtonSection">
+            {buttons.map((button) => (
+              <a href={button.route} className="nav-link scrollto">
+                <motion.div
+                  whileHover={{ scale: 1 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <Paper
-                    className="navButtons"
-                    elevation={8}
-                    style={{ backgroundColor: "#EDCD00" }}
+                    className="navButton"
+                    style={{ backgroundColor: "#edcd00", borderRadius: "10px" }}
+                    elevation={16}
                   >
-                    Service History
+                    {button.name}
                   </Paper>
-                </Link>
-              </motion.div>
+                </motion.div>
+              </a>
+            ))}
 
+            {sessionStorage.getItem("token") ? (
+              <div className="userButtons">
+                <Link to="serviceHistory" style={{ textDecoration: "none" }}>
+                  <motion.div
+                    whileHover={{ scale: 1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  >
+                    <Paper
+                      className="navButton"
+                      style={{
+                        backgroundColor: "#edcd00",
+                        borderRadius: "10px",
+                      }}
+                      elevation={16}
+                    >
+                      Your History
+                    </Paper>
+                  </motion.div>
+                </Link>
+                <motion.div
+                  whileHover={{ scale: 1 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  onClick={() => {
+                    sessionStorage.clear();
+                    window.location.reload();
+                  }}
+                >
+                  <Paper
+                    className="navButton"
+                    style={{ backgroundColor: "#edcd00", borderRadius: "10px" }}
+                    elevation={16}
+                  >
+                    Log out
+                  </Paper>
+                </motion.div>
+              </div>
+            ) : (
               <motion.div
                 whileHover={{ scale: 1 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 onClick={() =>
-                  sessionStorage.clear() || window.location.reload()
+                  setOpenForm(true) ||
+                  setSignupForm(false) ||
+                  setForgotPasswordForm(false)
                 }
               >
                 <Paper
-                  className="navButtons"
-                  elevation={8}
-                  style={{ backgroundColor: "#EDCD00" }}
+                  className="navButton"
+                  style={{ backgroundColor: "#edcd00", borderRadius: "10px" }}
+                  elevation={16}
                 >
-                  Log Out
+                  Log in
                 </Paper>
               </motion.div>
-            </>
-          ) : (
-            <motion.div
-              whileHover={{ scale: 1 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              onClick={() => setLogInForm(true) || setnewPinSetForm(false)}
-            >
-              <Paper
-                className="navButtons"
-                elevation={8}
-                style={{ backgroundColor: "#EDCD00" }}
-              >
-                Log In
-              </Paper>
-            </motion.div>
-          )}
-
-          {logInButton()}
-        </div>
-      )}
-
-      {userHistory ? (
-        <Paper className="userHistoryTab" elevation={8}>
-          <div className="closeButtonSection">
-            <IconButton
-              aria-label="delete"
-              size="large"
-              onClick={() => setUserHistory(false)}
-            >
-              <CloseIcon />
-            </IconButton>
+            )}
           </div>
-        </Paper>
+        ) : (
+          <Menudropdown />
+        )}
+      </div>
+      {openForm ? (
+        <div className="userFormSection">
+          {!signUpform && !forgotPassword ? (
+            <Paper elevation={16} className="userForm">
+              <div className="closeButtonSection">
+                <IconButton onClick={() => setOpenForm(false)}>
+                  <CloseIcon color="error" />
+                </IconButton>
+              </div>
+              <span>Log In</span>
+              <form
+                className="formTextFields"
+                onSubmit={logInUser.handleSubmit}
+              >
+                <TextField
+                  id="email"
+                  label="Email"
+                  type="email"
+                  name="email"
+                  variant="standard"
+                  onChange={logInUser.handleChange}
+                />
+                <TextField
+                  id="pin"
+                  label="Pass Code"
+                  type="number"
+                  name="pin"
+                  variant="standard"
+                  onChange={logInUser.handleChange}
+                />
+                <Button type="submit">Login</Button>
+              </form>
+
+              <Button
+                onClick={() =>
+                  setSignupForm(true) || setForgotPasswordForm(false)
+                }
+              >
+                New to our site?
+              </Button>
+              <Button onClick={() => setForgotPasswordForm(true)}>
+                Forgot Password?
+              </Button>
+            </Paper>
+          ) : !forgotPassword ? (
+            <Paper elevation={16} className="userForm">
+              <div className="closeButtonSection">
+                <IconButton onClick={() => setOpenForm(false)}>
+                  <CloseIcon color="error" />
+                </IconButton>
+              </div>
+              <span>Sign Up</span>
+              <form
+                className="formTextFields"
+                onSubmit={logInUser.handleSubmit}
+              >
+                <TextField
+                  id="email"
+                  label="Email"
+                  type="email"
+                  name="email"
+                  variant="standard"
+                  onChange={logInUser.handleChange}
+                />
+                <Button type="submit">Verify Email</Button>
+              </form>
+            </Paper>
+          ) : (
+            <Paper elevation={16} className="userForm">
+              <div className="closeButtonSection">
+                <IconButton onClick={() => setOpenForm(false)}>
+                  <CloseIcon color="error" />
+                </IconButton>
+              </div>
+              <span>Forgot PassCode?</span>
+              <form
+                className="formTextFields"
+                onSubmit={logInUser.handleSubmit}
+              >
+                <TextField
+                  id="email"
+                  label="Email"
+                  type="email"
+                  name="email"
+                  variant="standard"
+                  onChange={logInUser.handleChange}
+                />
+                <Button type="submit">Send OTP</Button>
+              </form>
+            </Paper>
+          )}
+        </div>
       ) : (
         ""
       )}

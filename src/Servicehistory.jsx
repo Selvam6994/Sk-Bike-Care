@@ -8,12 +8,16 @@ function Servicehistory() {
   const resTable = useMediaQuery("(min-width:480px)");
   const resBar = useMediaQuery("(min-width:400px)");
 
-  let token = sessionStorage.authrisationToken
-
+  let token = sessionStorage.token
   let id = jwt_decode(token);
+  
 const[serviceStatus,setServiceStatus]=useState([])
 async function getServiceStatus (){
-  const getData = await fetch(`http://localhost:4000/customerServiceStatus/${id.email}`)
+  const getData = await fetch(`https://sk-bike-care-backend.vercel.app/customerServiceStatus/${id.email}`,{
+    headers: {
+      "x-auth-token": sessionStorage.getItem("token"),
+    },
+  })
   
   const jsonData =await getData.json()
   if(jsonData.message=="no data"){
@@ -27,10 +31,10 @@ async function getServiceStatus (){
   const [historyData, setHistoryData] = useState([]);
   async function getServiceHistory() {
     const getServiceData = await fetch(
-      `http://localhost:4000/serviceHistory/${id.email}`,
+      `https://sk-bike-care-backend.vercel.app/serviceHistory/${id.email}`,
       {
         headers: {
-          "x-auth-token": sessionStorage.getItem("authrisationToken"),
+          "x-auth-token": sessionStorage.getItem("token"),
         },
       }
     );

@@ -9,76 +9,91 @@
 .navBar {
   width: 100%;
   min-width: 100px;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: fixed;
-  z-index: 2;
-}
-.tabResNavBar {
-  width: 100%;
-  min-width: 100px;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: space-between;
-  position: fixed;
-  z-index: 2;
-}
-
-.navLogoSection {
-  width: 25%;
-  height: 100px;
-}
-
-.resNavLogoSection {
-  width: 100%;
-  height: 100px;
+  min-height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 50px;
+  position: fixed;
+  z-index: 2;
 }
 
-.navLogoSection img {
-  width: 150px;
-  height: 150px;
+.navContent {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+}
+
+.appLogo {
+  width: 250px;
+  height: 250px;
   object-fit: cover;
-  padding: 5px;
+  margin-top: 55px;
 }
 
-.navButtonsSection {
+.navButtonSection {
   width: 70%;
-  height: 100px;
+  height: 150px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding: 0 10px;
-  gap: 2rem;
-}
-.resNavButtonsSection {
-  width: 100%;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
+  justify-content: space-evenly;
 }
 
-.navButtons {
+.navButton {
   width: fit-content;
-  height: 50px;
+  height: fit-content;
+  padding: 5px 10px 5px 10px;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
   cursor: pointer;
-  font-size: 18px;
+}
+
+.userFormSection {
+  position: absolute;
+  border: 2px solid;
+  width: 100%;
+  height: 80vh;
+  top: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.userForm {
+  width: 550px;
+  height: fit-content;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.userForm span {
+  font-size: 30px;
   font-weight: bolder;
 }
+.formTextFields {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
 
+.closeButtonSection {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: end;
+}
+.userButtons {
+  display: flex;
+  gap: 2rem;
+}
+/* 
 .logInFormPaper,
 .userAccountFormPaper {
   position: absolute;
@@ -167,7 +182,7 @@
   height: 400px;
   right: 20px;
   top: 150px;
-}
+} */
 
 /* ---------Home Page Properties--------- */
 .homePage {
@@ -277,7 +292,7 @@
 }
 
 .aboutUsCard {
-  width: 70%;
+  width: 90%;
   min-width: 280px;
   height: fit-content;
   display: flex;
@@ -301,8 +316,7 @@
 }
 
 .aboutUsContent {
-  position: absolute;
-  width: 70%;
+  width: 100%;
   height: 300px;
   display: flex;
   flex-direction: column;
@@ -340,8 +354,9 @@
   font-size: 15px;
   color: #edcd00;
 }
+
 .featuresSection {
-  width: 70%;
+  width: 100%;
   height: fit-content;
   display: flex;
   align-items: center;
@@ -402,6 +417,7 @@
   color: aliceblue;
   font-size: 25px;
 }
+
 .tabResBrands {
   width: 100%;
   height: fit-content;
@@ -431,8 +447,8 @@
 }
 
 .bookingStepsCard {
-  width: 70%;
-  height: 300px;
+  width: 90%;
+  height: fit-content;
   margin-top: 100px;
 }
 
@@ -465,7 +481,7 @@
 }
 
 .bookingCardSection {
-  width: 80%;
+  width: 100%;
   height: fit-content;
   display: flex;
   flex-direction: column;
@@ -614,6 +630,7 @@
   align-items: center;
   gap: 2rem;
 }
+
 /* ------------------------------------------------------------ */
 .tabResContactPageComponents {
   width: 100%;
@@ -653,6 +670,7 @@
   align-items: center;
   gap: 2rem;
 }
+
 /* ------------------------------------------------- */
 .contactIcon,
 .socialIcon {
@@ -679,6 +697,7 @@
   align-items: center;
   justify-content: center;
 }
+
 /* ...................My Bookings................... */
 .serviceHistoryPage {
   border: 2px solid;
@@ -698,9 +717,11 @@
   align-items: center;
   justify-content: space-evenly;
 }
+
 .infoBar img {
   width: 100px;
 }
+
 .infoBar span {
   margin: 25px;
   font-size: 20px;
@@ -720,16 +741,19 @@
 .resInfoBar img {
   width: 100px;
 }
+
 .resInfoBar span {
   margin: 5px;
   font-size: 20px;
   color: #ffffff;
 }
+
 .statusSection,
 .historySection {
   border: 2px solid;
   margin-top: 20px;
 }
+
 .statusTable {
   border: 2px solid;
   width: 100%;
@@ -742,6 +766,7 @@
   gap: 1rem;
   overflow: scroll;
 }
+
 .statusTable table {
   width: 95%;
   height: fit-content;
@@ -769,6 +794,7 @@
   gap: 1rem;
   overflow: scroll;
 }
+
 .resStatusTable table {
   width: 95%;
   height: fit-content;
@@ -785,4 +811,5 @@
   border: 2px solid black;
   font-size: 10px;
 }
+
 /* ...................My Bookings................... */
