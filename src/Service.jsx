@@ -20,7 +20,7 @@ function Service() {
   const [serviceOptions, setServiceOptions] = useState([]);
   //   get service list data function
   async function showServiceData() {
-    const serviceList = await fetch("https://sk-bike-care-backend.vercel.app/getServiceList");
+    const serviceList = await fetch("https://sk-bike-app-backend.onrender.com/getServiceList");
     const jsonData = await serviceList.json();
 
     if (jsonData.message == "No data available") {
@@ -200,7 +200,7 @@ function Service() {
       date: "",
     },
     onSubmit: async (values) => {
-      let bookingData = await fetch("https://sk-bike-care-backend.vercel.app/serviceBooking", {
+      let bookingData = await fetch("https://sk-bike-app-backend.onrender.com/serviceBooking", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

@@ -85,7 +85,7 @@ function Contact() {
       message: "",
     },
     onSubmit: async (values) => {
-      let enquiry = await fetch("https://sk-bike-care-backend.vercel.app/enquires", {
+      let enquiry = await fetch("https://sk-bike-app-backend.onrender.com/enquires", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

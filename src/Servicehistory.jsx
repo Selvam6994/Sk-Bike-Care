@@ -13,7 +13,7 @@ function Servicehistory() {
   
 const[serviceStatus,setServiceStatus]=useState([])
 async function getServiceStatus (){
-  const getData = await fetch(`https://sk-bike-care-backend.vercel.app/customerServiceStatus/${id.email}`,{
+  const getData = await fetch(`https://sk-bike-app-backend.onrender.com/customerServiceStatus/${id.email}`,{
     headers: {
       "x-auth-token": sessionStorage.getItem("token"),
     },
@@ -31,7 +31,7 @@ async function getServiceStatus (){
   const [historyData, setHistoryData] = useState([]);
   async function getServiceHistory() {
     const getServiceData = await fetch(
-      `https://sk-bike-care-backend.vercel.app/serviceHistory/${id.email}`,
+      `https://sk-bike-app-backend.onrender.com/serviceHistory/${id.email}`,
       {
         headers: {
           "x-auth-token": sessionStorage.getItem("token"),

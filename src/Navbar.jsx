@@ -45,7 +45,7 @@ function Navbar() {
       pin: "",
     },
     onSubmit: async (values) => {
-      let userData = await fetch("https://sk-bike-care-backend.vercel.app/logIn", {
+      let userData = await fetch("https://sk-bike-app-backend.onrender.com/logIn", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
